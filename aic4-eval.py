@@ -261,7 +261,7 @@ def main():
                         help='Evaluation mode: "dataset" for full dataset or "single" for single pair')
     parser.add_argument('--root-dir', type=str, default='aic4-evaluation',
                         help='Root directory of dataset (for dataset mode)')
-    parser.add_argument('--output', type=str, default='IDFIQA_results.csv',
+    parser.add_argument('--output', type=str, default='results.csv',
                         help='Output CSV file path (for dataset mode)')
     parser.add_argument('--ref-img', type=str,
                         help='Path to reference image (for single mode)')
