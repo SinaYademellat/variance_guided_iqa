@@ -318,7 +318,7 @@ src_001.png,src_001.png-01-05.png,0.9986413717269896,0.016270358697388243
 - **dis_img_name:** The name of the distorted image being compared
 - **quality_score:** The quality score for this pair (0-1)
 - **jnd_mapped**: quality score mapped to JND.
-  We use the following mapping function with `b = 0.98` and `a = 17.0`
+  We use the following mapping function with `b = 0.97` and `a = 17.0`
 
 ``` python
 a * max(0, b - x)
