@@ -248,12 +248,10 @@ def evaluate_single_pair(model, ref_path, dist_path, device):
     
     return score
 
-def JND(Q):
-    B = 3
-    J_max = 4
-    term1 = -B * (1 - Q)
-    term2 = J_max * (1 - math.exp(term1))
-    return term2
+def JND(x):
+    b = 0.98
+    a = 17.0
+    return a * max(0, b - x)
 
 def main():
     parser = argparse.ArgumentParser(description='Evaluate image quality')
