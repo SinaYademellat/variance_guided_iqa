@@ -4,6 +4,7 @@ This document explains how to use the `aic4-eval.py` script to evaluate image qu
 
 ## Table of Contents
 - [What Does This Tool Do?](#what-does-this-tool-do)
+- [Web Application](#web-application)
 - [Prerequisites](#prerequisites)
 - [Environment Setup](#environment-setup)
 - [Understanding the Feature Extractor](#understanding-the-feature-extractor)
@@ -24,6 +25,16 @@ The `aic4-eval.py` script evaluates the quality of distorted images by comparing
 The tool can work in two ways:
 1. **Single mode**: Compare one reference image to one distorted image
 2. **Dataset mode**: Compare many reference images to their corresponding distorted versions all at once
+
+---
+
+## Web Application
+
+You can try the single image pair evaluation mode directly in your browser without any installation:
+
+**🌐 Live Demo:** [https://idfiqa.ivp-lab.ir](https://idfiqa.ivp-lab.ir)
+
+The web app provides an easy-to-use interface for uploading a reference image and a distorted image to get instant quality scores.
 
 ---
 
