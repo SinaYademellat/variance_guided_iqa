@@ -249,7 +249,7 @@ def evaluate_single_pair(model, ref_path, dist_path, device):
     return score
 
 def JND(x):
-    b = 0.99
+    b = 1.0
     a = 15.0
     return a * max(0, b - x)
 
