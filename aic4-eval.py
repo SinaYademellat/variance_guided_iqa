@@ -302,7 +302,8 @@ def main():
     if args.mode == 'single':
         # Single pair evaluation
         score = evaluate_single_pair(model, args.ref_img, args.dist_img, device)
-        print(f"IDFIQA Score: {score:.6f}")
+        mapped_score = JND(score)
+        print(f"IDFIQA Score: {mapped_score:.6f}")
         print(f"Reference: {args.ref_img}")
         print(f"Distorted: {args.dist_img}")
     else:
