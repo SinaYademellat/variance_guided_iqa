@@ -20,9 +20,15 @@ This document explains how to use the `aic4-eval.py` script to evaluate image qu
 
 ## What Does This Tool Do?
 
-The `aic4-eval.py` script evaluates the quality of distorted images by comparing them to their original (reference) versions. It uses a deep learning model to calculate a quality score. The higher the score, the better the quality of the distorted image.
+This repository provides two evaluation scripts for image quality assessment:
 
-The tool can work in two ways:
+### 1. `aic4-eval.py` - Variance-Guided IDFIQA
+The main evaluation script that uses variance-guided feature selection. It evaluates the quality of distorted images by comparing them to their original (reference) versions. The higher the score, the better the quality of the distorted image.
+
+### 2. `patching-eval.py` - Weighted Patch-Based IDFIQA
+An advanced evaluation script that uses a weighted patch-based approach. It divides feature maps into patches and computes spatially-weighted quality scores, providing more detailed spatial quality assessment.
+
+Both tools can work in two ways:
 1. **Single mode**: Compare one reference image to one distorted image
 2. **Dataset mode**: Compare many reference images to their corresponding distorted versions all at once
 
@@ -202,11 +208,13 @@ unzip aic4-evaluation-png.zip -d /path/to/your/datasets/
 
 ---
 
-## Running the Script
+## Running the Scripts
 
-The script has two modes: **single** (for comparing one pair of images) and **dataset** (for comparing many images).
+Both scripts have two modes: **single** (for comparing one pair of images) and **dataset** (for comparing many images).
 
-### Mode 1: Single Image Pair Evaluation
+### Using `aic4-eval.py` (Variance-Guided IDFIQA)
+
+#### Mode 1: Single Image Pair Evaluation
 
 Use this mode when you want to quickly check the quality of one distorted image compared to its reference.
 
@@ -292,6 +300,52 @@ python aic4-eval.py --mode dataset --root-dir ./dataset-folder --num-workers 1
 
 **Note:** More workers = faster image loading, but uses more RAM. Start with 2 and increase if your computer can handle it.
 
+### Using `patching-eval.py` (Weighted Patch-Based IDFIQA)
+
+The `patching-eval.py` script uses the same modes and arguments as `aic4-eval.py`, with an additional option for patch size.
+
+#### Mode 1: Single Image Pair Evaluation
+
+**Basic syntax:**
+```bash
+python patching-eval.py --mode single --ref-img /path/to/reference.png --dist-img /path/to/distorted.png
+```
+
+**Example:**
+```bash
+python patching-eval.py --mode single --ref-img ./images/original.png --dist-img ./images/compressed.png
+```
+
+**Example output:**
+```
+WeightedPatchIDFIQA Score: 0.847523
+Reference: ./images/original.png
+Distorted: ./images/compressed.png
+```
+
+#### Mode 2: Full Dataset Evaluation
+
+**Basic syntax:**
+```bash
+python patching-eval.py --mode dataset --root-dir /path/to/dataset-folder --output results.csv
+```
+
+**Example:**
+```bash
+python patching-eval.py --mode dataset --root-dir ./dataset-folder --output patching-results.csv
+```
+
+#### Additional Options for Patching
+
+The patching script includes an additional `--patch-size` parameter:
+
+```bash
+python patching-eval.py --mode single \
+    --ref-img ref.png \
+    --dist-img dist.png \
+    --patch-size 8  # Size of patches in feature space (default: 8)
+```
+
 ---
 
 ## Understanding the Output
@@ -341,7 +395,7 @@ a * max(0, b - x)
 
 ### Command-Line Arguments Reference
 
-Here's a complete list of all options you can use:
+#### Common Arguments (both scripts)
 
 | Argument | Description | Default | Required |
 |----------|-------------|---------|----------|
@@ -352,6 +406,12 @@ Here's a complete list of all options you can use:
 | `--output` | Output CSV file path (dataset mode only) | `results.csv` | No |
 | `--num-workers` | Number of worker processes for data loading | `2` | No |
 | `--percent-features` | Percentage of feature maps to keep (0.0 to 1.0) | `0.7` | No |
+
+#### Additional Arguments for `patching-eval.py`
+
+| Argument | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `--patch-size` | Size of patches in feature space | `8` | No |
 
 ### About --percent-features (Advanced Reference)
 
@@ -421,7 +481,7 @@ Once all items are checked, you're ready to use the tool!
 
 ## Example Workflows
 
-### Workflow 1: Quick Test with Single Image
+### Workflow 1: Quick Test with Single Image (Variance-Guided)
 
 ```bash
 # 1. Activate environment
@@ -435,16 +495,36 @@ python aic4-eval.py --mode single \
 # Output: IDFIQA Score: 0.847523
 ```
 
-### Workflow 2: Evaluate Full Dataset
+### Workflow 2: Quick Test with Single Image (Weighted Patching)
 
 ```bash
 # 1. Activate environment
 source venv/bin/activate
 
-# 2. Run full dataset evaluation
+# 2. Test with one pair using patching approach
+python patching-eval.py --mode single \
+    --ref-img ./test_images/original.png \
+    --dist-img ./test_images/compressed.png
+
+# Output: WeightedPatchIDFIQA Score: 0.847523
+```
+
+### Workflow 3: Evaluate Full Dataset
+
+```bash
+# 1. Activate environment
+source venv/bin/activate
+
+# 2. Run full dataset evaluation (choose one)
 python aic4-eval.py --mode dataset \
     --root-dir ./dataset-folder \
     --output results.csv \
+    --num-workers 4
+
+# Or use the patching approach
+python patching-eval.py --mode dataset \
+    --root-dir ./dataset-folder \
+    --output patching-results.csv \
     --num-workers 4
 
 # 3. Check results
